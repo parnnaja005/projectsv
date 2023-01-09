@@ -166,7 +166,7 @@ def upload_file():
       print(f)
       # filename = secure_filename(f.filename)
       # f.save(os.path.join("files/",filename))
-      headers = {"Authorization": "Bearer ya29.A0ARrdaM8eqwPEmB9KtOAiHHDwVx01AzAu_llOtTlbriU39FlSYSuqhY5ygbMPZrj445KAkXZA4ZNfPpb6hnUEJJjnOhMHSaZJ0Ki_21c5LckOx54Od4_ZIgxl-dl5V_p8-EKkJuGmDJ_YRS-i0btJI08opHmR"}
+      headers = {"Authorization": "Bearer ya29.a0AX9GBdWV_W83JuZ9X4VPGw1Kc2DiLzgu7d-rhJnBj1HePrCVygAs3e3az57rp8-9rV8MwQZrD_du96tCYGhn1Z3j26MnRKKrEl930J5rWFu_d--hE-k-pHcsNcNp7Z7s9KmUiFHkNauZXfs99VvSK3TBTX8KaCgYKATkSARMSFQHUCsbCcq5timFIxBEvX9aKD2AP9A0163"}
       para = {"name": f.filename,
               "parents": ["1SwUwF6v5mzBvR50xX4QEP0krrme0ssem"]
             }
