@@ -26,7 +26,7 @@ app.config["JWT_COOKIE_SECURE"] = False
 app.config["JWT_SECRET_KEY"] = "super-secret"
 
 jwt = JWTManager(app)
-db = pymongo.MongoClient('mongodb+srv://parnnaja005:0864680770za@cluster0.chz67.mongodb.net/myFirstDatabase?retryWrites=true&w=majority').datebasegameguide
+db = pymongo.MongoClient('mongodb+srv://phattaraphon:0989153312@cluster0.trckf.mongodb.net').datebasegameguide
 
 @app.route("/")
 def hello():
