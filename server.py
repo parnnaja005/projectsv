@@ -26,7 +26,7 @@ app.config["JWT_COOKIE_SECURE"] = False
 app.config["JWT_SECRET_KEY"] = "super-secret"
 
 jwt = JWTManager(app)
-db = pymongo.MongoClient('mongodb+srv://phattaraphon:0989153312@cluster0.trckf.mongodb.net').datebasegameguide
+db = pymongo.MongoClient('mongodb+srv://parnnaja005:0864680770za@cluster0.chz67.mongodb.net').datebasegameguide
 
 @app.route("/")
 def hello():
@@ -50,7 +50,7 @@ def singup():
       salt = bcrypt.gensalt()
       hashed = bcrypt.hashpw(password,salt)
       p = hashed.decode()
-      db.user.insert_one({'name':name,'email':email,'password':p,'credit':0,'blog':[]})
+      db.user.insert_one({'name':name,'email':email,'password':p,'credit':0,'blog':[],'role':'user'})
       return "success"
 @app.route('/signin', methods = ['GET', 'POST'])
 def singin():
@@ -69,6 +69,7 @@ def singin():
           name = str(user[0]['name'])
           email = str(user[0]['email'])
           credit= str(user[0]['credit'])
+          role= str(user[0]['role'])
           # key = jwk.JWK.generate(kty='RSA', size=2048)
           # key = ''
           # payload = { 'id': ids, 'name': name,"email":email }
@@ -76,7 +77,7 @@ def singin():
           # token = jwt.encode({'id': ids, 'name': name,'email': email},key="",algorithm="HS256")
           # return "Match"
           # return {'status':'singin success',"id":ids,"name":name,"email":email}
-          token = create_access_token({ 'id': ids, 'name': name,"email":email,'credit':credit })
+          token = create_access_token({ 'id': ids, 'name': name,"email":email,'credit':credit,'role':role })
           return {'status':'singin success','token':token}
         else:
           print("does not match")
@@ -100,19 +101,30 @@ def postcontent():
     content = data['content']
     x = datetime.datetime.now()
     date = x.strftime("%d")+" "+x.strftime("%B")+" "+x.strftime("%Y")
-    db.post.insert_one({"iduser":id,"content":content,'title':title,'category':category,'create_by':create_by,'credit':credit,'image_id':image_id,'date':date})
+    db.post.insert_one({"iduser":id,"content":content,'title':title,'category':category,'create_by':create_by,'credit':credit,'image_id':image_id,'date':date,'status':True})
     db.user.update_one({"_id": ObjectId(id)}, {'$inc': {'credit': 15}})
     return {"status":"post success"}
 
-@app.route("/blogs")
-def blogs():
-    docs = db.post.find()
+@app.route("/blogsall/<userid>")
+def blogsall(userid):
+    if(userid =="1"):
+       docs = db.post.find()
+    else: 
+       docs = db.post.find({"iduser":userid})
     data = []
     for i in docs:
         data.append(i)
         print(i)
     return dumps(data)
-
+@app.route("/changestatuspost/<id>/<status>")
+def changestatuspost(id,status):
+    print(id,status)
+    if status == "1":
+       status = True
+    else :
+       status = False   
+    db.post.update_one({"_id": ObjectId(id)}, { "$set": { 'status': status } })
+    return {"status":"update success"}
 @app.route("/blogs/<id>")
 def blogsdetail(id):
     print(id)
@@ -194,3 +206,11 @@ def checkblog(id,blogid):
       return "yes"
     else:
       return "no"
+@app.route("/getlistblogbuy/<id>")
+def getlistblogbuy(id):
+    docs = db.user.find_one({"_id": ObjectId(id)},{ 'blog': 1}) 
+    data = []
+    for i in docs['blog']:
+        data.append(i)
+        print(i)
+    return dumps(data)
